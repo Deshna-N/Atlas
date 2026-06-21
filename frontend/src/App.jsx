@@ -97,7 +97,14 @@ const updateTrip = async (tripId) => {
 
   return (
     <div className="app">
-      <h1>Atlas</h1>
+      <div className="hero">
+      <h1>Atlas ✨</h1>
+
+      <p className="tagline">
+        Remember the places you've been,
+        and dream about the ones you'll discover.
+      </p>
+    </div>
 
       <div className="trip-form"> 
       <input
@@ -145,8 +152,26 @@ const updateTrip = async (tripId) => {
           Create Trip
         </button>
 
-          <p>{message}</p>
-          </div>
+        <p>{message}</p>
+        </div>
+
+        <div className="dashboard">
+        <div className="stat-card">
+          <h3>{trips.length}</h3>
+          <p>Trips Planned</p>
+        </div>
+
+        <div className="stat-card">
+          <h3>
+            $
+            {trips.reduce(
+              (total, trip) => total + trip.budget,
+              0
+            )}
+          </h3>
+          <p>Total Budget</p>
+        </div>
+      </div>
 
           <h2>My Trips</h2>
 
