@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
+from bson import ObjectId
 
 load_dotenv()
 
@@ -58,3 +59,25 @@ def get_trips():
         trips.append(trip)
 
     return trips
+
+@app.delete("/trips/{trip_id}")
+def delete_trip(trip_id: str):
+
+    trips_collection.delete_one(
+        {"_id": ObjectId(trip_id)} ## convert into syntax for Mongodb
+    )
+
+    return {"success": True}
+
+@app.put("/trips/{trip_id}")
+async def update_trip(trip_id: str, trip_data: dict):
+    trips_collection.update_one(
+        {"_id": ObjectId(trip_id)},
+        {
+            "$set": {
+                "destination": trip_data["destination"]
+            }
+        }
+    )
+
+    return {"message": "Trip updated"}

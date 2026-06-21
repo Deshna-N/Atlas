@@ -9,6 +9,8 @@ function App() {
   const [notes, setNotes] = useState("")
   const [message, setMessage] = useState("")
   const [trips, setTrips] = useState([])
+  const [editingTripId, setEditingTripId] = useState(null)
+  const [editDestination, setEditDestination] = useState("")
 
   const createTrip = async () => {
     if (
@@ -56,6 +58,42 @@ function App() {
   useEffect(() => {
     fetchTrips();
   }, []);
+
+  const deleteTrip = async (tripId) => {
+
+  await fetch(
+    `http://127.0.0.1:8000/trips/${tripId}`,
+    {
+      method: "DELETE",
+    }
+  );
+
+  await fetchTrips();
+};
+
+const updateTrip = async (tripId) => {
+  const response = await fetch(
+    `http://127.0.0.1:8000/trips/${tripId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        destination: editDestination,
+      }),
+    }
+  )
+
+  if (!response.ok) {
+    setMessage("Failed to update trip")
+    return
+  }
+
+  await fetchTrips()
+  setEditingTripId(null)
+  setMessage("Trip updated!")
+}
 
   return (
     <div className="app">
@@ -122,6 +160,32 @@ function App() {
       </p>
       <p>${trip.budget}</p>
       <p>{trip.notes}</p>
+      <button
+        onClick={() => {
+          setEditingTripId(trip._id)
+          setEditDestination(trip.destination)
+        }}
+      >
+        Edit Trip
+      </button>
+      <button
+        onClick={() => deleteTrip(trip._id)}
+      >
+        Delete Trip
+      </button>
+
+      {editingTripId === trip._id && (
+        <div>
+          <input
+            value={editDestination}
+            onChange={(e) => setEditDestination(e.target.value)}
+          />
+
+        <button onClick={() => updateTrip(trip._id)}>
+        Save Changes
+        </button>
+        </div>
+      )}
     </div>
   ))}
     </div>
