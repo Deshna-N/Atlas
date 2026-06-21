@@ -3,6 +3,11 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+
+# protect secrets
+.env
+backend/.env
+
 # C extensions
 *.so
 
