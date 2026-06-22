@@ -98,61 +98,55 @@ const updateTrip = async (tripId) => {
   return (
     <div className="app">
       <div className="hero">
-      <h1>Atlas ✨</h1>
+        <h1>
+          Atlas <span className="hero-star">✨</span>
+        </h1>
 
-      <p className="tagline">
-        Remember the places you've been,
-        and dream about the ones you'll discover.
-      </p>
-    </div>
+        <p className="tagline">
+          Remember the places you've been, and dream about the ones you'll discover.
+        </p>
+      </div>
 
       <div className="trip-form"> 
-      <input
-      placeholder="Destination"
-      value={destination}
-      onChange={(e) => setDestination(e.target.value)}
-    />
-
-    <br /><br />
-
-      <input
-        type="date"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
+        <h2>Plan Your Adventure</h2>
+        <input
+        placeholder="Destination"
+        value={destination}
+        onChange={(e) => setDestination(e.target.value)}
       />
 
-      <br /><br />
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
 
-      <input
-        type="date"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
-      />
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+        />
 
-      <br /><br />
+        <input
+          type="number"
+          placeholder="Budget"
+          value={budget}
+          onChange={(e) => setBudget(e.target.value)}
+        />
 
-      <input
-        type="number"
-        placeholder="Budget"
-        value={budget}
-        onChange={(e) => setBudget(e.target.value)}
-      />
-
-      <br /><br />
-
-      <textarea
-        placeholder="Notes"
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-      />
-
-      <br /><br />
+        <textarea
+          placeholder="Notes"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+        />
 
         <button onClick={createTrip}>
           Create Trip
         </button>
 
-        <p>{message}</p>
+        <p className="success-message">
+          {message}
+        </p>
         </div>
 
         <div className="dashboard">
@@ -179,7 +173,7 @@ const updateTrip = async (tripId) => {
 
   {trips.map((trip) => (
     <div className="trip-card" key={trip._id}>
-      <h3>{trip.destination}</h3>
+      <h3>🌎{trip.destination}</h3>
       <p>
         {trip.start_date} - {trip.end_date}
       </p>
