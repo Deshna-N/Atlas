@@ -16,6 +16,8 @@ db = client["atlas"]
 
 trips_collection = db["trips"]
 
+wishlist_collection = db["wishlist"]
+
 app = FastAPI()
 
 app.add_middleware(
@@ -33,10 +35,15 @@ class Trip(BaseModel):
     budget: int = Field(..., gt=0)
     notes: str
 
+class WishlistItem(BaseModel):
+    destination: str
+
 @app.get("/")
 def root():
     return {"message": "Welcome to Atlas"}
 
+
+## Trip endpoints
 @app.post("/trips")
 def create_trip(trip: Trip):
 
@@ -81,3 +88,37 @@ async def update_trip(trip_id: str, trip_data: dict):
     )
 
     return {"message": "Trip updated"}
+
+
+ ## Wishlist endpoints
+@app.post("/wishlist")
+def create_wishlist_item(item: WishlistItem):
+
+    item_dict = item.model_dump()
+
+    result = wishlist_collection.insert_one(item_dict)
+
+    return {
+        "success": True,
+        "id": str(result.inserted_id)
+    }
+
+@app.get("/wishlist")
+def get_wishlist():
+
+    items = []
+
+    for item in wishlist_collection.find():
+        item["_id"] = str(item["_id"])
+        items.append(item)
+
+    return items
+
+@app.delete("/wishlist/{item_id}")
+def delete_wishlist_item(item_id: str):
+
+    wishlist_collection.delete_one(
+        {"_id": ObjectId(item_id)}
+    )
+
+    return {"success": True}

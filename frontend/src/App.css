@@ -166,3 +166,29 @@ button {
 button:hover {
   transform: translateY(-2px);
 }
+
+.wishlist-section {
+  max-width: 700px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+.wishlist-input-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.wishlist-card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 15px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}

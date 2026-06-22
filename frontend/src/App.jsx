@@ -1,4 +1,7 @@
 import "./App.css"
+import Dashboard from "./components/Dashboard"
+import TripCard from "./components/TripCard"
+import WishlistCard from "./components/WishlistCard"
 import { useState, useEffect } from "react"
 
 function App() {
@@ -11,6 +14,8 @@ function App() {
   const [trips, setTrips] = useState([])
   const [editingTripId, setEditingTripId] = useState(null)
   const [editDestination, setEditDestination] = useState("")
+  const [wishlist, setWishlist] = useState([])
+  const [dreamDestination, setDreamDestination] = useState("")
 
   const createTrip = async () => {
     if (
@@ -41,11 +46,8 @@ function App() {
       setMessage("Trip creation failed.")
       return
     }
-    
     const data = await response.json();
-
     await fetchTrips();
-
     setMessage(`Trip created: ${destination}`);
   };
 
@@ -55,20 +57,26 @@ function App() {
       setTrips(trips);
     };
 
+  const fetchWishlist = async () => {
+  const response = await fetch("http://127.0.0.1:8000/wishlist")
+  const items = await response.json()
+  setWishlist(items)
+  }
+
   useEffect(() => {
     fetchTrips();
+    fetchWishlist()
   }, []);
 
-  const deleteTrip = async (tripId) => {
-
+const deleteTrip = async (tripId) => {
   await fetch(
     `http://127.0.0.1:8000/trips/${tripId}`,
-    {
-      method: "DELETE",
-    }
-  );
+      {
+        method: "DELETE",
+      }
+    );
 
-  await fetchTrips();
+    await fetchTrips();
 };
 
 const updateTrip = async (tripId) => {
@@ -84,15 +92,41 @@ const updateTrip = async (tripId) => {
       }),
     }
   )
-
   if (!response.ok) {
     setMessage("Failed to update trip")
     return
   }
-
   await fetchTrips()
   setEditingTripId(null)
   setMessage("Trip updated!")
+}
+
+const addWishlistItem = async () => {
+
+  if (!dreamDestination.trim()) {
+    return}
+  await fetch("http://127.0.0.1:8000/wishlist", {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      destination: dreamDestination
+    })
+  })
+  setDreamDestination("")
+  fetchWishlist()
+}
+
+const deleteWishlistItem = async (itemId) => {
+  await fetch(
+    `http://127.0.0.1:8000/wishlist/${itemId}`,
+    {
+      method: "DELETE"
+    }
+  )
+  fetchWishlist()
 }
 
   return (
@@ -149,67 +183,62 @@ const updateTrip = async (tripId) => {
         </p>
         </div>
 
-        <div className="dashboard">
-        <div className="stat-card">
-          <h3>{trips.length}</h3>
-          <p>Trips Planned</p>
-        </div>
+        <Dashboard trips={trips} />
 
-        <div className="stat-card">
-          <h3>
-            $
-            {trips.reduce(
-              (total, trip) => total + trip.budget,
-              0
-            )}
-          </h3>
-          <p>Total Budget</p>
-        </div>
-      </div>
+      <h2>My Trips</h2>
+      <div className="trip-grid"> 
 
-          <h2>My Trips</h2>
 
-          <div className="trip-grid">
+    {trips.map((trip) => (
 
-  {trips.map((trip) => (
-    <div className="trip-card" key={trip._id}>
-      <h3>🌎{trip.destination}</h3>
-      <p>
-        {trip.start_date} - {trip.end_date}
-      </p>
-      <p>${trip.budget}</p>
-      <p>{trip.notes}</p>
-      <button
-        onClick={() => {
-          setEditingTripId(trip._id)
-          setEditDestination(trip.destination)
-        }}
-      >
-        Edit Trip
-      </button>
-      <button
-        onClick={() => deleteTrip(trip._id)}
-      >
-        Delete Trip
-      </button>
+  <TripCard
+    key={trip._id}
+    trip={trip}
+    editingTripId={editingTripId}
+    editDestination={editDestination}
+    setEditingTripId={setEditingTripId}
+    setEditDestination={setEditDestination}
+    updateTrip={updateTrip}
+    deleteTrip={deleteTrip}
+  />
 
-      {editingTripId === trip._id && (
-        <div>
-          <input
-            value={editDestination}
-            onChange={(e) => setEditDestination(e.target.value)}
-          />
+))}
+</div>
 
-        <button onClick={() => updateTrip(trip._id)}>
-        Save Changes
-        </button>
-        </div>
-      )}
-    </div>
-  ))}
-    </div>
-    </div>
-  );
+  <div className="wishlist-section">
+
+  <h2>🌙 Dream Destinations</h2>
+
+  <div className="wishlist-input-row">
+
+    <input
+      placeholder="Add dream destination..."
+      value={dreamDestination}
+      onChange={(e) =>
+        setDreamDestination(e.target.value)
+      }
+    />
+
+    <button onClick={addWishlistItem}>
+      Add Destination
+    </button>
+
+  </div>
+
+  {wishlist.map((item) => (
+
+  <WishlistCard
+    key={item._id}
+    item={item}
+    deleteWishlistItem={deleteWishlistItem}
+  />
+
+))}
+
+</div>
+
+</div>
+);
 }
 
 export default App;
