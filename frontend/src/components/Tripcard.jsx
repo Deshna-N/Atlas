@@ -11,7 +11,10 @@ function TripCard({
   return (
     <div className="trip-card">
 
-      <h3>🌎 {trip.destination}</h3>
+      <h3>🧭{trip.destination}</h3>
+        <p className="trip-label">
+        Adventure Planned
+        </p>
 
       <p>
         {trip.start_date} - {trip.end_date}
@@ -19,7 +22,9 @@ function TripCard({
 
       <p>${trip.budget}</p>
 
-      <p>{trip.notes}</p>
+      <p className="trip-notes">
+        "{trip.notes}"
+    </p>
 
       <button
         onClick={() => {

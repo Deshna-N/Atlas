@@ -161,6 +161,8 @@ const deleteWishlistItem = async (itemId) => {
           onChange={(e) => setEndDate(e.target.value)}
         />
 
+        
+
         <input
           type="number"
           placeholder="Budget"
@@ -185,7 +187,9 @@ const deleteWishlistItem = async (itemId) => {
 
         <Dashboard trips={trips} />
 
-      <h2>My Trips</h2>
+      <h2 className="section-title">
+        📖 My Journey Log
+      </h2>
       <div className="trip-grid"> 
 
 
@@ -207,7 +211,7 @@ const deleteWishlistItem = async (itemId) => {
 
   <div className="wishlist-section">
 
-  <h2>🌙 Dream Destinations</h2>
+  <h2>⭐ Future Adventures</h2>
 
   <div className="wishlist-input-row">
 
