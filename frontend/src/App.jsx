@@ -16,6 +16,15 @@ function App() {
   const [editDestination, setEditDestination] = useState("")
   const [wishlist, setWishlist] = useState([])
   const [dreamDestination, setDreamDestination] = useState("")
+  const [fireflies] = useState(
+  Array.from({ length: 25 }, () => ({
+    top: Math.random() * 100,
+    left: Math.random() * 100,
+    delay: Math.random() * 5,
+    size: 2 + Math.random() * 6,
+    duration: 6 + Math.random() * 10
+  }))
+)
 
   const createTrip = async () => {
     if (
@@ -129,8 +138,24 @@ const deleteWishlistItem = async (itemId) => {
   fetchWishlist()
 }
 
+
   return (
     <div className="app">
+      {fireflies.map((firefly, index) => (
+        <div
+          key={index}
+          className="firefly"
+          style={{
+            top: `${firefly.top}%`,
+            left: `${firefly.left}%`,
+            animationDelay: `${firefly.delay}s`,
+            animationDuration: `${firefly.duration}s`,
+            width: `${firefly.size}px`,
+            height: `${firefly.size}px`
+          }}
+        />
+      ))}
+
       <div className="hero">
         <h1>
           Atlas <span className="hero-star">✨</span>
@@ -193,21 +218,21 @@ const deleteWishlistItem = async (itemId) => {
       <div className="trip-grid"> 
 
 
-    {trips.map((trip) => (
+          {trips.map((trip) => (
 
-  <TripCard
-    key={trip._id}
-    trip={trip}
-    editingTripId={editingTripId}
-    editDestination={editDestination}
-    setEditingTripId={setEditingTripId}
-    setEditDestination={setEditDestination}
-    updateTrip={updateTrip}
-    deleteTrip={deleteTrip}
-  />
+        <TripCard
+          key={trip._id}
+          trip={trip}
+          editingTripId={editingTripId}
+          editDestination={editDestination}
+          setEditingTripId={setEditingTripId}
+          setEditDestination={setEditDestination}
+          updateTrip={updateTrip}
+          deleteTrip={deleteTrip}
+        />
 
-))}
-</div>
+      ))}
+    </div>
 
   <div className="wishlist-section">
 

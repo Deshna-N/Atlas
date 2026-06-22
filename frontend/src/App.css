@@ -46,8 +46,21 @@ body {
 .trip-form textarea {
   padding: 12px;
   border-radius: 8px;
-  border: none;
   font-size: 16px;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: 0.25s;
+}
+
+.trip-form input:focus,
+.trip-form textarea:focus {
+  outline: none;
+
+  border: 1px solid rgba(255,215,0,0.35);
+
+  box-shadow:
+    0 0 12px rgba(255,215,0,0.2);
 }
 
 .trip-form button {
@@ -87,8 +100,10 @@ body {
   transform: translateY(-8px);
 
   box-shadow:
-    0 12px 35px rgba(79,124,255,0.3);
-  border: 1px solid rgba(255,215,0,0.25);
+    0 0 20px rgba(79,124,255,0.25),
+    0 0 40px rgba(255,215,0,0.15);
+
+  border: 1px solid rgba(255,215,0,0.15);
 }
 
 .trip-card h3 {
@@ -129,7 +144,7 @@ body {
 }
 
 .hero h1 {
- font-size: 5rem;
+ font-size: 6rem;
 
   margin: 0;
 
@@ -237,14 +252,92 @@ button:hover {
 }
 
 .wishlist-card {
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 12px;
-  margin-top: 15px;
+  background: rgba(30,41,59,0.9);
+
+  border-radius: 24px;
+
+  padding: 24px;
+
+  margin-top: 20px;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  backdrop-filter: blur(8px);
+
+  box-shadow:
+    0 8px 30px rgba(0,0,0,0.25);
+
+  transition: 0.3s;
+}
+
+.wishlist-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 0 20px rgba(255,215,0,0.15);
+}
+
+.firefly {
+  position: fixed;
+  border-radius: 50%;
+
+  background: #ffe27a;
+
+  box-shadow:
+    0 0 8px #ffe27a,
+    0 0 15px #ffe27a,
+    0 0 25px rgba(255,226,122,0.5);
+
+  animation:
+    floatFirefly 8s ease-in-out infinite,
+    pulseFirefly 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes floatFirefly {
+  0% {
+    transform: translate(0px, 0px);
+  }
+
+  25% {
+    transform: translate(15px, -20px);
+  }
+
+  50% {
+    transform: translate(-10px, -40px);
+  }
+
+  75% {
+    transform: translate(20px, -10px);
+  }
+
+  100% {
+    transform: translate(0px, 0px);
+  }
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes pulseFirefly {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
 }
