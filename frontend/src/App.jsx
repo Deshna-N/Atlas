@@ -25,6 +25,15 @@ function App() {
     duration: 6 + Math.random() * 10
   }))
 )
+const [clouds] = useState(
+  Array.from({ length: 18 }, () => ({
+    top: Math.random() * 100,
+    left: Math.random() * 100,
+    delay: Math.random() * 8,
+    size: 2 + Math.random() * 3
+  }))
+)
+const [theme, setTheme] = useState("dark")
 
   const createTrip = async () => {
     if (
@@ -76,6 +85,9 @@ function App() {
     fetchTrips();
     fetchWishlist()
   }, []);
+  useEffect(() => {
+  document.body.className = theme
+}, [theme])
 
 const deleteTrip = async (tripId) => {
   await fetch(
@@ -140,21 +152,41 @@ const deleteWishlistItem = async (itemId) => {
 
 
   return (
-    <div className="app">
-      {fireflies.map((firefly, index) => (
-        <div
-          key={index}
-          className="firefly"
-          style={{
-            top: `${firefly.top}%`,
-            left: `${firefly.left}%`,
-            animationDelay: `${firefly.delay}s`,
-            animationDuration: `${firefly.duration}s`,
-            width: `${firefly.size}px`,
-            height: `${firefly.size}px`
-          }}
-        />
-      ))}
+    <div className={`app ${theme}`}>
+      {theme === "dark" ? (
+
+    fireflies.map((firefly, index) => (
+      <div
+        key={index}
+        className="firefly"
+        style={{
+          top: `${firefly.top}%`,
+          left: `${firefly.left}%`,
+          animationDelay: `${firefly.delay}s`,
+          width: `${firefly.size}px`,
+          height: `${firefly.size}px`
+        }}
+      />
+    ))
+
+  ) : (
+
+    clouds.map((cloud, index) => (
+      <div
+        key={index}
+        className="cloud"
+        style={{
+          top: `${cloud.top}%`,
+          left: `${cloud.left}%`,
+          animationDelay: `${cloud.delay}s`,
+          fontSize: `${cloud.size}rem`
+        }}
+      >
+        ☁️
+      </div>
+    ))
+
+  )}
 
       <div className="hero">
         <h1>
@@ -164,8 +196,25 @@ const deleteWishlistItem = async (itemId) => {
         <p className="tagline">
           Remember the places you've been, and dream about the ones you'll discover.
         </p>
-      </div>
 
+        <div className="theme-toggle">
+
+          <button
+          className={theme === "light" ? "active-theme" : ""}
+          onClick={() => setTheme("light")}
+        >
+          ☀︎
+        </button>
+
+        <button
+          className={theme === "dark" ? "active-theme" : ""}
+          onClick={() => setTheme("dark")}
+        >
+          ☾
+        </button>
+
+        </div>
+      </div>
       <div className="trip-form"> 
         <h2>Plan Your Adventure</h2>
         <input
