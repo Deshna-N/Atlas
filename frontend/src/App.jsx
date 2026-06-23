@@ -11,6 +11,7 @@ function App() {
   const [budget, setBudget] = useState("")
   const [notes, setNotes] = useState("")
   const [message, setMessage] = useState("")
+  const [imageUrl, setImageUrl] = useState("")
   const [trips, setTrips] = useState([])
   const [editingTripId, setEditingTripId] = useState(null)
   const [editDestination, setEditDestination] = useState("")
@@ -51,11 +52,12 @@ const [theme, setTheme] = useState("dark")
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-      destination: destination,
-      start_date: startDate,
-      end_date: endDate,
-      budget: Number(budget),
-      notes: notes,
+        destination: destination,
+        start_date: startDate,
+        end_date: endDate,
+        budget: Number(budget),
+        notes: notes,
+        image_url: imageUrl,
     }),
     });
 
@@ -67,6 +69,12 @@ const [theme, setTheme] = useState("dark")
     const data = await response.json();
     await fetchTrips();
     setMessage(`Trip created: ${destination}`);
+    setImageUrl("")
+    setDestination("")
+    setStartDate("")
+    setEndDate("")
+    setBudget("")
+    setNotes("")
   };
 
   const fetchTrips = async () => {
@@ -248,6 +256,12 @@ const deleteWishlistItem = async (itemId) => {
           placeholder="Notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Image URL"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
         />
 
         <button onClick={createTrip}>

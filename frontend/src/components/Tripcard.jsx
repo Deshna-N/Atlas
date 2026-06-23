@@ -8,24 +8,70 @@ function TripCard({
   deleteTrip
 }) {
 
+const today = new Date()
+
+const tripStart = new Date(trip.start_date)
+
+const diffTime =
+  tripStart - today
+
+const daysUntil =
+  Math.ceil(
+    diffTime /
+    (1000 * 60 * 60 * 24)
+  )
+
+let countdownText = ""
+
+if (daysUntil > 1) {
+  countdownText =
+    `${daysUntil} days away`
+}
+else if (daysUntil === 1) {
+  countdownText =
+    "Starts tomorrow"
+}
+else if (daysUntil === 0) {
+  countdownText =
+    "Starts today"
+}
+else {
+  countdownText =
+    "Adventure in progress"
+}
+
   return (
     <div className="trip-card">
+        {trip.image_url && (
+        <img
+            src={trip.image_url}
+            alt={trip.destination}
+            className="trip-image"
+        />
+        )}
+        <h3>📍{trip.destination}</h3>
+        <p className="countdown">
+            ⏳ {countdownText}
+            </p>
+            <p className="trip-label">
+            {countdownText === "Adventure in progress"
+                ? "CURRENT ADVENTURE"
+                : countdownText === "Adventure completed"
+                ? "PAST ADVENTURE"
+                : "ADVENTURE PLANNED"}
+            </p>
 
-      <h3>📍{trip.destination}</h3>
-        <p className="trip-label">
-        Adventure Planned
-        </p>
+     
 
-    <p>🗓 {trip.start_date} - {trip.end_date}</p>
+        <p>💰 ${trip.budget}</p>
 
-    <p>💰 ${trip.budget}</p>
-
-    <p>📖 {trip.notes}</p>
+        <p>📖 {trip.notes}</p>
 
       <button
         onClick={() => {
           setEditingTripId(trip._id)
           setEditDestination(trip.destination)
+          
         }}
       >
         Edit Trip
