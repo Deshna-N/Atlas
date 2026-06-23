@@ -34,6 +34,7 @@ class Trip(BaseModel):
     end_date: str
     budget: int = Field(..., gt=0)
     notes: str
+    image_url: str = ""
 
 class WishlistItem(BaseModel):
     destination: str
