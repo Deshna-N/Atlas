@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
@@ -14,7 +14,7 @@ L.Icon.Default.mergeOptions({
     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 })
 
-function FlyToLocation({ selectedTrip, locations }) {
+function FlyToLocation({ selectedTrip, locations, markerRefs }) {
   const map = useMap()
 
   useEffect(() => {
@@ -34,6 +34,14 @@ function FlyToLocation({ selectedTrip, locations }) {
         duration: 2
       }
     )
+    setTimeout(() => {
+    const marker =
+        markerRefs.current[selectedTrip.destination]
+
+    if (marker) {
+        marker.openPopup()
+    }
+    }, 2000)
   }, [selectedTrip, locations, map])
 
   return null
@@ -41,6 +49,7 @@ function FlyToLocation({ selectedTrip, locations }) {
 
 function TravelMap({ trips, selectedTrip }) {
   const [locations, setLocations] = useState([])
+  const markerRefs = useRef({})
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -58,9 +67,9 @@ function TravelMap({ trips, selectedTrip }) {
 
           if (data.length > 0) {
             mappedLocations.push({
-              destination: trip.destination,
-              lat: Number(data[0].lat),
-              lon: Number(data[0].lon),
+            ...trip,
+            lat: Number(data[0].lat),
+            lon: Number(data[0].lon),
             })
           }
         } catch (error) {
@@ -97,18 +106,36 @@ function TravelMap({ trips, selectedTrip }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <FlyToLocation
-            selectedTrip={selectedTrip}
-            locations={locations}
+        selectedTrip={selectedTrip}
+        locations={locations}
+        markerRefs={markerRefs}
         />
 
         {locations.map((location, index) => (
           <Marker
             key={index}
             position={[location.lat, location.lon]}
-          >
+            ref={(ref) => {
+                markerRefs.current[location.destination] = ref
+            }}
+        >
             <Popup>
-              📍 {location.destination}
-            </Popup>
+
+                <h3>📍 {location.destination}</h3>
+
+                <p>
+                    🗓 {location.start_date} - {location.end_date}
+                </p>
+
+                <p>
+                    💰 Budget: ${location.budget}
+                </p>
+
+                <p>
+                    📖 {location.notes}
+                </p>
+
+                </Popup>
           </Marker>
         ))}
       </MapContainer>
