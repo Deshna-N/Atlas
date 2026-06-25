@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
 
@@ -14,7 +14,32 @@ L.Icon.Default.mergeOptions({
     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 })
 
-function TravelMap({ trips }) {
+function FlyToLocation({ selectedTrip, locations }) {
+  const map = useMap()
+
+  useEffect(() => {
+    if (!selectedTrip) return
+
+    const location = locations.find(
+      (loc) => loc.destination === selectedTrip.destination
+    )
+
+    if (!location) return
+
+    map.flyTo(
+      [location.lat, location.lon],
+      6,
+      {
+        animate: true,
+        duration: 2
+      }
+    )
+  }, [selectedTrip, locations, map])
+
+  return null
+}
+
+function TravelMap({ trips, selectedTrip }) {
   const [locations, setLocations] = useState([])
 
   useEffect(() => {
@@ -70,6 +95,10 @@ function TravelMap({ trips }) {
         <TileLayer
           attribution='&copy; OpenStreetMap contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <FlyToLocation
+            selectedTrip={selectedTrip}
+            locations={locations}
         />
 
         {locations.map((location, index) => (

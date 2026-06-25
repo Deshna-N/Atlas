@@ -36,6 +36,7 @@ const [clouds] = useState(
   }))
 )
 const [theme, setTheme] = useState("dark")
+const [selectedTrip, setSelectedTrip] = useState(null)
 
   const createTrip = async () => {
     if (
@@ -276,7 +277,10 @@ const deleteWishlistItem = async (itemId) => {
 
         <Dashboard trips={trips} />
 
-        <TravelMap trips={trips} />
+        <TravelMap
+          trips={trips}
+          selectedTrip={selectedTrip}
+        />
 
       <h2 className="section-title">
         📖 My Journey Log
@@ -295,6 +299,7 @@ const deleteWishlistItem = async (itemId) => {
           setEditDestination={setEditDestination}
           updateTrip={updateTrip}
           deleteTrip={deleteTrip}
+          setSelectedTrip={setSelectedTrip}
         />
 
       ))}

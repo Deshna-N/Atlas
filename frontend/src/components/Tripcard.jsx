@@ -5,7 +5,8 @@ function TripCard({
   setEditingTripId,
   setEditDestination,
   updateTrip,
-  deleteTrip
+  deleteTrip,
+  setSelectedTrip
 }) {
 
 const today = new Date()
@@ -66,7 +67,12 @@ else {
         <p>💰 ${trip.budget}</p>
 
         <p>📖 {trip.notes}</p>
-
+      <button
+        onClick={() => setSelectedTrip(trip)}
+      >
+        View on Map
+      </button>
+      
       <button
         onClick={() => {
           setEditingTripId(trip._id)
