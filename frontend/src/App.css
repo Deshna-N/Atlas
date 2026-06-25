@@ -534,3 +534,14 @@ body.dark {
   border-radius: 12px;
   margin-bottom: 12px;
 }
+
+.map-section {
+  margin-top: 40px;
+}
+
+.travel-map {
+  height: 500px;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+}

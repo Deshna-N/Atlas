@@ -2,6 +2,7 @@ import "./App.css"
 import Dashboard from "./components/Dashboard"
 import TripCard from "./components/TripCard"
 import WishlistCard from "./components/WishlistCard"
+import TravelMap from "./components/TravelMap"
 import { useState, useEffect } from "react"
 
 function App() {
@@ -274,6 +275,8 @@ const deleteWishlistItem = async (itemId) => {
         </div>
 
         <Dashboard trips={trips} />
+
+        <TravelMap trips={trips} />
 
       <h2 className="section-title">
         📖 My Journey Log
