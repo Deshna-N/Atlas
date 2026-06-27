@@ -4,6 +4,11 @@ import TripCard from "./components/TripCard"
 import WishlistCard from "./components/WishlistCard"
 import TravelMap from "./components/TravelMap"
 import { useState, useEffect } from "react"
+import { Routes, Route } from "react-router-dom"
+import Home from "./pages/Home"
+import MapPage from "./pages/MapPage"
+import TripPage from "./pages/TripPage"
+import WishlistPage from "./pages/WishlistPage"
 
 function App() {
   const [destination, setDestination] = useState("")
