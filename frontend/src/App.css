@@ -545,3 +545,31 @@ body.dark {
   border-radius: 16px;
   overflow: hidden;
 }
+
+.leaflet-popup-content {
+  min-width: 260px;
+  line-height: 1.5;
+}
+
+.leaflet-popup-content h3 {
+  margin-bottom: 10px;
+}
+
+.leaflet-popup-content h4 {
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+.leaflet-popup-content hr {
+  margin: 12px 0;
+}
+
+.attraction-link {
+  color: #4f7cff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.attraction-link:hover {
+  text-decoration: underline;
+}

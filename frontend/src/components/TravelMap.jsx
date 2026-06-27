@@ -47,9 +47,38 @@ function FlyToLocation({ selectedTrip, locations, markerRefs }) {
   return null
 }
 
+const weatherDescriptions = {
+  0: "☀️ Clear Sky",
+  1: "🌤 Mostly Clear",
+  2: "⛅ Partly Cloudy",
+  3: "☁️ Overcast",
+
+  45: "🌫 Fog",
+  48: "🌫 Freezing Fog",
+
+  51: "🌦 Light Drizzle",
+  53: "🌦 Moderate Drizzle",
+  55: "🌧 Heavy Drizzle",
+
+  61: "🌧 Light Rain",
+  63: "🌧 Rain",
+  65: "🌧 Heavy Rain",
+
+  71: "❄️ Light Snow",
+  73: "❄️ Snow",
+  75: "❄️ Heavy Snow",
+
+  80: "🌦 Rain Showers",
+  81: "🌦 Heavy Showers",
+
+  95: "⛈ Thunderstorm"
+}
+
 function TravelMap({ trips, selectedTrip }) {
   const [locations, setLocations] = useState([])
   const markerRefs = useRef({})
+  const [weatherData, setWeatherData] = useState({})
+  const [attractions, setAttractions] = useState({})
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -89,6 +118,70 @@ function TravelMap({ trips, selectedTrip }) {
     }
   }, [trips])
 
+  useEffect(() => {
+    const fetchWeather = async () => {
+    const weatherResults = {}
+    for (const location of locations) {
+        try {
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lon}&current=temperature_2m,weather_code,wind_speed_10m&temperature_unit=fahrenheit`)
+        const data = await response.json()
+        weatherResults[location.destination] = {
+            ...data.current,
+
+            temperatureF: data.current.temperature_2m,
+
+            temperatureC:
+                ((data.current.temperature_2m - 32) * 5) / 9
+            }
+        }
+        catch (error) {
+            console.error(error)
+            }
+    }
+    setWeatherData(weatherResults)
+    }
+    if (locations.length > 0) {
+        fetchWeather()
+}
+}, [locations])
+
+useEffect(() => {
+
+    const fetchAttractions = async () => {
+
+        const attractionResults = {}
+
+        for (const location of locations) {
+
+            try {
+
+                const response = await fetch(
+                    `https://api.geoapify.com/v2/places?categories=tourism.sights&filter=circle:${location.lon},${location.lat},10000&limit=5&apiKey=${import.meta.env.VITE_GEOAPIFY_API_KEY}`
+                )
+
+                const data = await response.json()
+
+                attractionResults[location.destination] =
+                    data.features || []
+
+            } catch (error) {
+
+                console.error(error)
+
+            }
+
+        }
+
+        setAttractions(attractionResults)
+
+    }
+
+    if (locations.length > 0) {
+        fetchAttractions()
+    }
+
+}, [locations])
+
   return (
     <div className="map-section">
       <h2 className="section-title">
@@ -122,19 +215,63 @@ function TravelMap({ trips, selectedTrip }) {
             <Popup>
 
                 <h3>📍 {location.destination}</h3>
-
                 <p>
                     🗓 {location.start_date} - {location.end_date}
                 </p>
-
                 <p>
                     💰 Budget: ${location.budget}
                 </p>
-
                 <p>
                     📖 {location.notes}
                 </p>
+                <hr />
+                <h4>
+                🌤 Current Weather
+                </h4>
+                {weatherData[location.destination] ? (
+                <>
+                <p>
+                {weatherDescriptions[weatherData[location.destination].weather_code]}
+                </p>
+                <p>
+                🌡 {Math.round(weatherData[location.destination].temperatureF)}°F
+                ({Math.round(weatherData[location.destination].temperatureC)}°C)
+                </p>
+                <p>
+                💨 {Math.round(weatherData[location.destination].wind_speed_10m)} km/h
+                </p>
+                </>
+                ) : (
+                <p>
+                Loading weather...
+                </p>
+                )}
 
+                <hr />
+                <h4>⭐ Top Attractions</h4>
+                {attractions[location.destination] ? (
+                attractions[location.destination].length > 0 ? (
+                    <ul>
+                    {attractions[location.destination].map((place, index) => (
+                        <li key={index}>
+                          <a
+                            className="attraction-link"
+                            href={`https://www.google.com/maps/search/?api=1&query=${place.properties.lat},${place.properties.lon}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {place.properties.name}
+                          </a>
+
+                        </li>
+                    ))}
+                    </ul>
+                ) : (
+                    <p>No attractions found.</p>
+                )
+                ) : (
+                <p>Loading attractions...</p>
+                )}
                 </Popup>
           </Marker>
         ))}
